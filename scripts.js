@@ -85,9 +85,13 @@ function editData(code) {
 
 document.getElementById('search-bar').addEventListener('input', function() {
     const query = this.value;
-    const filterRadius = document.getElementById('filter-radius').checked;
-    const results = filterData(query, filterRadius);
-    displayResults(results);
+    if (/^[A-Z]{0,2}-\d{0,4}$/.test(query)) {  // Restrict to 2 letters, dash, and 4 numbers
+        const filterRadius = document.getElementById('filter-radius').checked;
+        const results = filterData(query, filterRadius);
+        displayResults(results);
+    } else {
+        this.value = this.value.slice(0, -1);  // Prevent invalid input
+    }
 });
 
 document.getElementById('filter-radius').addEventListener('change', function() {
@@ -105,7 +109,9 @@ document.querySelectorAll('.number-buttons button').forEach(button => {
             searchBar.value = searchBar.value.slice(0, -1);
         } else if (value === "→") {
         } else {
-            searchBar.value += value;
+            if (/^[A-Z]{0,2}-\d{0,4}$/.test(searchBar.value + value)) {
+                searchBar.value += value;
+            }
         }
         const query = searchBar.value;
         const filterRadius = document.getElementById('filter-radius').checked;
@@ -118,7 +124,9 @@ document.querySelectorAll('.letter-buttons button').forEach(button => {
     button.addEventListener('click', function() {
         const letter = this.textContent;
         const searchBar = document.getElementById('search-bar');
-        searchBar.value += letter;
+        if (/^[A-Z]{0,2}$/.test(searchBar.value.split('-')[0] + letter)) {
+            searchBar.value += letter;
+        }
         const query = searchBar.value;
         const filterRadius = document.getElementById('filter-radius').checked;
         const results = filterData(query, filterRadius);
@@ -137,14 +145,28 @@ document.querySelectorAll('.letter-buttons button').forEach(button => {
             displayResults(results);
         }
     });
+
+    button.addEventListener('long-press', function() {
+        const searchBar = document.getElementById('search-bar');
+        const position = searchBar.value.indexOf(this.textContent);
+        if (position !== -1) {
+            searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
+            const query = searchBar.value;
+            const filterRadius = document.getElementById('filter-radius').checked;
+            const results = filterData(query, filterRadius);
+            displayResults(results);
+        }
+    });
 });
 
 document.getElementById('add-data').addEventListener('click', function() {
     if (currentUser && currentUser.role === 'admin') {
         const newData = document.getElementById('new-data').value;
-        if (newData) {
+        if (/^[A-Z]{2}-\d{4}$/.test(newData)) {
             addData(newData, 'admin');
             document.getElementById('new-data').value = '';
+        } else {
+            alert('Invalid format. Use: AB-1234');
         }
     } else {
         alert('Only admins can add new data');
