@@ -153,3 +153,36 @@ body {
 .search-results div:hover {
     background-color: #f1f1f1;
 }
+
+.admin-controls {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.admin-controls h3 {
+    margin-bottom: 10px;
+}
+
+.admin-controls input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.admin-controls button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.data-list {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
