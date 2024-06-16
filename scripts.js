@@ -2,10 +2,9 @@ let searchInput = document.getElementById('searchInput');
 let clearButton = document.getElementById('clearButton');
 let voiceButton = document.getElementById('voiceButton');
 let searchButton = document.getElementById('searchButton');
-let searchBar = document.getElementById('searchBar');
-let searchResults = document.getElementById('searchResults');
 let locationToggle = document.getElementById('locationToggle');
 let radiusInput = document.getElementById('radiusInput');
+let searchResults = document.getElementById('searchResults');
 
 let userLocation = null;
 
@@ -23,12 +22,15 @@ voiceButton.addEventListener('click', () => {
 // Handle search button click
 searchButton.addEventListener('click', () => {
     let query = searchInput.value;
-    if (query) {
+    let pattern = /^[A-Za-z]{2}-\d{4}$/;
+    if (pattern.test(query)) {
         if (locationToggle.checked && userLocation) {
             filterResultsByLocation(query, userLocation, parseInt(radiusInput.value));
         } else {
             displayResults([`Results for "${query}"`]);
         }
+    } else {
+        alert('Please enter a valid search query (e.g., AB-1234)');
     }
 });
 
@@ -76,33 +78,7 @@ function filterResultsByLocation(query, location, radius) {
     displayResults(filteredResults);
 }
 
-// Swipe gestures to clear input or access additional options
-let touchstartX = 0;
-let touchstartY = 0;
-let touchendX = 0;
-let touchendY = 0;
-
-searchBar.addEventListener('touchstart', (event) => {
-    touchstartX = event.changedTouches[0].screenX;
-    touchstartY = event.changedTouches[0].screenY;
-}, false);
-
-searchBar.addEventListener('touchend', (event) => {
-    touchendX = event.changedTouches[0].screenX;
-    touchendY = event.changedTouches[0].screenY;
-    handleGesture();
-}, false);
-
-function handleGesture() {
-    if (touchendX < touchstartX) {
-        searchInput.value = '';
-    }
-    if (touchendX > touchstartX) {
-        alert('Accessing additional options');
-    }
-}
-
-// Real-time search result display as the user types
+// Example for instant search results as the user types
 searchInput.addEventListener('input', () => {
     let value = searchInput.value.toLowerCase();
     searchResults.innerHTML = '';
