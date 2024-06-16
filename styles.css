@@ -48,9 +48,27 @@ body {
     opacity: 0.6;
 }
 
+.location-filter {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.location-filter input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.location-filter input[type="number"] {
+    width: 70px;
+    margin-left: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .search-results {
     position: absolute;
-    top: 60px;
+    top: 120px;
     width: calc(100% - 20px);
     background-color: #fff;
     border: 1px solid #ccc;
