@@ -31,33 +31,29 @@ body {
     border-radius: 5px;
     margin-bottom: 10px;
     text-align: center;
-}
-
-.touch-keyboard {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.letter-button,
-.number-button {
-    padding: 10px;
-    font-size: 18px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    cursor: pointer;
+    width: 150px;
 }
 
 #clearButton {
     background-color: #f44336;
     margin-top: 10px;
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
 }
 
 #voiceButton {
     background-color: #4CAF50;
     margin-top: 10px;
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
 }
 
 #searchButton {
@@ -73,6 +69,43 @@ body {
 
 #searchButton:hover {
     opacity: 0.8;
+}
+
+.touch-keyboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.letter-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.letter-button {
+    padding: 10px;
+    font-size: 20px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.number-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.number-button {
+    padding: 20px;
+    font-size: 24px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 .location-filter {
