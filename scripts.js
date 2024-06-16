@@ -1,4 +1,5 @@
 let currentUser = null;
+let excelData = [];
 
 const users = [
     { username: 'admin', password: 'adminpass', role: 'admin' },
@@ -24,25 +25,23 @@ document.getElementById('login-button').addEventListener('click', function() {
 // Hide admin container initially
 document.querySelector('.admin-container').style.display = 'none';
 
-const database = {
-    data: [
-        { code: "AB-1234", createdBy: "admin" },
-        { code: "CD-5678", createdBy: "admin" },
-        { code: "EF-9012", createdBy: "admin" }
-    ],
-    getAllData() {
-        return this.data;
-    },
-    addData(newEntry) {
-        this.data.push(newEntry);
-    },
-    updateData(oldCode, newCode) {
-        const item = this.data.find(item => item.code === oldCode);
-        if (item) {
-            item.code = newCode;
-        }
-    }
-};
+document.getElementById('file-input').addEventListener('change', handleFile, false);
+
+function handleFile(e) {
+    const files = e.target.files;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        excelData = jsonData.slice(1).map(row => ({ code: row[0], createdBy: 'excel' }));
+        displayResults(excelData);
+    };
+    reader.readAsArrayBuffer(file);
+}
 
 function displayResults(results) {
     const resultsContainer = document.getElementById('search-results');
@@ -54,8 +53,7 @@ function displayResults(results) {
 }
 
 function filterData(query, filterRadius) {
-    const allData = database.getAllData();
-    return allData.filter(item => {
+    return excelData.filter(item => {
         let matchesQuery = item.code.includes(query);
         if (filterRadius) {
             matchesQuery = true;
@@ -65,7 +63,7 @@ function filterData(query, filterRadius) {
 }
 
 function addData(code, createdBy) {
-    database.addData({ code, createdBy });
+    excelData.push({ code, createdBy });
     const query = document.getElementById('search-bar').value;
     const filterRadius = document.getElementById('filter-radius').checked;
     const results = filterData(query, filterRadius);
@@ -75,11 +73,14 @@ function addData(code, createdBy) {
 function editData(code) {
     const newCode = prompt("Enter new code:", code);
     if (newCode) {
-        database.updateData(code, newCode);
-        const query = document.getElementById('search-bar').value;
-        const filterRadius = document.getElementById('filter-radius').checked;
-        const results = filterData(query, filterRadius);
-        displayResults(results);
+        const item = excelData.find(item => item.code === code);
+        if (item) {
+            item.code = newCode;
+            const query = document.getElementById('search-bar').value;
+            const filterRadius = document.getElementById('filter-radius').checked;
+            const results = filterData(query, filterRadius);
+            displayResults(results);
+        }
     }
 }
 
@@ -124,6 +125,29 @@ document.querySelectorAll('.number-buttons button').forEach(button => {
 });
 
 document.querySelectorAll('.letter-buttons button').forEach(button => {
+    let timer;
+    button.addEventListener('mousedown', function() {
+        timer = setTimeout(() => {
+            const searchBar = document.getElementById('search-bar');
+            const position = searchBar.value.indexOf(this.textContent);
+            if (position !== -1) {
+                searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
+                const query = searchBar.value;
+                const filterRadius = document.getElementById('filter-radius').checked;
+                const results = filterData(query, filterRadius);
+                displayResults(results);
+            }
+        }, 800); // Adjust the time for long press detection here (800 ms)
+    });
+
+    button.addEventListener('mouseup', function() {
+        clearTimeout(timer);
+    });
+
+    button.addEventListener('mouseleave', function() {
+        clearTimeout(timer);
+    });
+
     button.addEventListener('click', function() {
         const letter = this.textContent;
         const searchBar = document.getElementById('search-bar');
@@ -134,19 +158,6 @@ document.querySelectorAll('.letter-buttons button').forEach(button => {
         const filterRadius = document.getElementById('filter-radius').checked;
         const results = filterData(query, filterRadius);
         displayResults(results);
-    });
-
-    button.addEventListener('contextmenu', function(event) {
-        event.preventDefault();
-        const searchBar = document.getElementById('search-bar');
-        const position = searchBar.value.indexOf(this.textContent);
-        if (position !== -1) {
-            searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
-            const query = searchBar.value;
-            const filterRadius = document.getElementById('filter-radius').checked;
-            const results = filterData(query, filterRadius);
-            displayResults(results);
-        }
     });
 });
 
