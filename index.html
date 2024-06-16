@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="login-container">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-button">Login</button>
+        <div id="user-role"></div>
+    </div>
+
     <div class="search-container">
         <input type="text" id="search-bar" placeholder="AB-1234">
         <label>
@@ -35,6 +42,12 @@
             <button>0</button>
             <button id="right-arrow">&rarr;</button> <!-- Right Arrow -->
         </div>
+    </div>
+
+    <div class="admin-container">
+        <h3>Admin: Add New Data</h3>
+        <input type="text" id="new-data" placeholder="AB-1234">
+        <button id="add-data">Add Data</button>
     </div>
 
     <script src="scripts.js"></script>
