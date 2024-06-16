@@ -1,179 +1,88 @@
-let currentUser = null;
-let excelData = [];
-
-const users = [
-    { username: 'admin', password: 'adminpass', role: 'admin' },
-    { username: 'user', password: 'userpass', role: 'user' }
-];
-
-function login(username, password) {
-    return users.find(user => user.username === username && user.password === password);
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
-document.getElementById('login-button').addEventListener('click', function() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    currentUser = login(username, password);
-    if (currentUser) {
-        document.getElementById('user-role').textContent = `Logged in as ${currentUser.role}`;
-        document.querySelector('.admin-container').style.display = currentUser.role === 'admin' ? 'block' : 'none';
-    } else {
-        alert('Invalid login');
-    }
-});
-
-// Hide admin container initially
-document.querySelector('.admin-container').style.display = 'none';
-
-document.getElementById('file-input').addEventListener('change', handleFile, false);
-
-function handleFile(e) {
-    const files = e.target.files;
-    const file = files[0];
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-        excelData = jsonData.slice(1).map(row => ({code: row[0], createdBy: 'excel'}));
-        displayResults(excelData);
-    };
-    reader.readAsArrayBuffer(file);
+.container {
+    max-width: 400px;
+    width: 100%;
+    margin: 20px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-function displayResults(results) {
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = results.map(item => `
-        <div>
-            ${item.code} ${item.createdBy !== 'admin' ? '<button onclick="editData(\'' + item.code + '\')">Edit</button>' : ''}
-        </div>
-    `).join('');
+.login-container,
+.search-container,
+.number-pad,
+.admin-container {
+    margin-bottom: 20px;
 }
 
-function filterData(query, filterRadius) {
-    return excelData.filter(item => {
-        let matchesQuery = item.code.includes(query);
-        if (filterRadius) {
-            matchesQuery = true;
-        }
-        return matchesQuery;
-    });
+.login-container input,
+.search-container input,
+.admin-container input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
 }
 
-function addData(code, createdBy) {
-    excelData.push({ code, createdBy });
-    const query = document.getElementById('search-bar').value;
-    const filterRadius = document.getElementById('filter-radius').checked;
-    const results = filterData(query, filterRadius);
-    displayResults(results);
+.login-container button,
+.admin-container button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
 }
 
-function editData(code) {
-    const newCode = prompt("Enter new code:", code);
-    if (newCode) {
-        const item = excelData.find(item => item.code === code);
-        if (item) {
-            item.code = newCode;
-            const query = document.getElementById('search-bar').value;
-            const filterRadius = document.getElementById('filter-radius').checked;
-            const results = filterData(query, filterRadius);
-            displayResults(results);
-        }
-    }
+#search-bar {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    margin-top: 10px;
 }
 
-document.getElementById('search-bar').addEventListener('input', function() {
-    const query = this.value;
-    if (/^[A-Z]{0,2}-\d{0,4}$/.test(query)) {  // Restrict to 2 letters, dash, and 4 numbers
-        const filterRadius = document.getElementById('filter-radius').checked;
-        const results = filterData(query, filterRadius);
-        displayResults(results);
-    } else {
-        this.value = this.value.slice(0, -1);  // Prevent invalid input
-    }
-});
+#file-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
 
-document.getElementById('filter-radius').addEventListener('change', function() {
-    const query = document.getElementById('search-bar').value;
-    const filterRadius = this.checked;
-    const results = filterData(query, filterRadius);
-    displayResults(results);
-});
+#search-results {
+    margin-top: 10px;
+    height: 150px; /* Adjust height to prevent moving number pad */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
-document.querySelectorAll('.number-buttons button').forEach(button => {
-    button.addEventListener('click', function() {
-        const value = this.textContent;
-        const searchBar = document.getElementById('search-bar');
-        if (value === "←") {
-            searchBar.value = searchBar.value.slice(0, -1);
-        } else if (value === "-") {
-            if (/^[A-Z]{2}$/.test(searchBar.value) && !searchBar.value.includes('-')) {
-                searchBar.value += value;
-            }
-        } else {
-            if (/^[A-Z]{0,2}-\d{0,4}$/.test(searchBar.value + value)) {
-                searchBar.value += value;
-            }
-        }
-        const query = searchBar.value;
-        const filterRadius = document.getElementById('filter-radius').checked;
-        const results = filterData(query, filterRadius);
-        displayResults(results);
-    });
-});
+.number-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-document.querySelectorAll('.letter-buttons button').forEach(button => {
-    let timer;
-    button.addEventListener('mousedown', function() {
-        timer = setTimeout(() => {
-            const searchBar = document.getElementById('search-bar');
-            const position = searchBar.value.indexOf(this.textContent);
-            if (position !== -1) {
-                searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
-                const query = searchBar.value;
-                const filterRadius = document.getElementById('filter-radius').checked;
-                const results = filterData(query, filterRadius);
-                displayResults(results);
-            }
-        }, 800); // Adjust the time for long press detection here (800 ms)
-    });
+.letter-buttons,
+.number-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 5px 0;
+}
 
-    button.addEventListener('mouseup', function() {
-        clearTimeout(timer);
-    });
+.letter-buttons button,
+.number-buttons button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    margin: 5px;
+}
 
-    button.addEventListener('mouseleave', function() {
-        clearTimeout(timer);
-    });
-
-    button.addEventListener('click', function() {
-        const letter = this.textContent;
-        const searchBar = document.getElementById('search-bar');
-        if (/^[A-Z]{0,2}$/.test(searchBar.value.split('-')[0] + letter)) {
-            searchBar.value += letter;
-        }
-        const query = searchBar.value;
-        const filterRadius = document.getElementById('filter-radius').checked;
-        const results = filterData(query, filterRadius);
-        displayResults(results);
-    });
-});
-
-document.getElementById('add-data').addEventListener('click', function() {
-    if (currentUser && currentUser.role === 'admin') {
-        const newData = document.getElementById('new-data').value;
-        if (/^[A-Z]{2}-\d{4}$/.test(newData)) {
-            addData(newData, 'admin');
-            document.getElementById('new-data').value = '';
-        } else {
-            alert('Invalid format. Use: AB-1234');
-        }
-    } else {
-        alert('Only admins can add new data');
-    }
-});
-
-const initialData = database.getAllData();
-displayResults(initialData);
+#user-role {
+    margin-top: 10px;
+    font-size: 18px;
+}
