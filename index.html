@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One-Handed Search Bar</title>
+    <title>Gesture-Controlled Search Bar</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="search-bar">
+    <div class="search-bar" id="searchBar">
         <input type="text" id="searchInput" placeholder="Search...">
         <button id="clearButton">&times;</button>
         <button id="voiceButton">&#127908;</button>
         <button id="searchButton">Search</button>
     </div>
+    <div id="searchResults" class="search-results"></div>
     <script src="script.js"></script>
 </body>
 </html>
