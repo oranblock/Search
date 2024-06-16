@@ -107,7 +107,10 @@ document.querySelectorAll('.number-buttons button').forEach(button => {
         const searchBar = document.getElementById('search-bar');
         if (value === "←") {
             searchBar.value = searchBar.value.slice(0, -1);
-        } else if (value === "→") {
+        } else if (value === "-") {
+            if (/^[A-Z]{2}$/.test(searchBar.value) && !searchBar.value.includes('-')) {
+                searchBar.value += value;
+            }
         } else {
             if (/^[A-Z]{0,2}-\d{0,4}$/.test(searchBar.value + value)) {
                 searchBar.value += value;
@@ -135,18 +138,6 @@ document.querySelectorAll('.letter-buttons button').forEach(button => {
 
     button.addEventListener('contextmenu', function(event) {
         event.preventDefault();
-        const searchBar = document.getElementById('search-bar');
-        const position = searchBar.value.indexOf(this.textContent);
-        if (position !== -1) {
-            searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
-            const query = searchBar.value;
-            const filterRadius = document.getElementById('filter-radius').checked;
-            const results = filterData(query, filterRadius);
-            displayResults(results);
-        }
-    });
-
-    button.addEventListener('long-press', function() {
         const searchBar = document.getElementById('search-bar');
         const position = searchBar.value.indexOf(this.textContent);
         if (position !== -1) {
