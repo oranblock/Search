@@ -14,6 +14,7 @@ body {
 
 .search-bar {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #fff;
@@ -28,41 +29,57 @@ body {
     font-size: 18px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 5px;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
-.search-bar button {
+.touch-keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.letter-button,
+.number-button {
     padding: 10px;
+    font-size: 18px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#clearButton {
+    background-color: #f44336;
+    margin-top: 10px;
+}
+
+#voiceButton {
+    background-color: #4CAF50;
+    margin-top: 10px;
+}
+
+#searchButton {
+    padding: 10px 20px;
     font-size: 18px;
     background-color: #007BFF;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: 5px;
+    margin-top: 20px;
 }
 
-#clearButton {
-    background-color: #f44336;
-}
-
-#voiceButton {
-    background-color: #4CAF50;
-}
-
-.search-bar button:hover {
+#searchButton:hover {
     opacity: 0.8;
-}
-
-.search-bar button:active {
-    opacity: 0.6;
 }
 
 .location-filter {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .location-filter input[type="checkbox"] {
