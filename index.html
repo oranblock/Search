@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Search Bar with Location Filter</title>
+    <title>Enhanced Search Bar with Data Management</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
             <div class="letter-buttons">
                 <button class="letter-button" id="letter1">A</button>
                 <button class="letter-button" id="letter2">B</button>
-</div>
+            </div>
             <div class="number-pad">
                 <button class="number-button">1</button>
                 <button class="number-button">2</button>
@@ -39,6 +39,12 @@
             <input type="number" id="radiusInput" placeholder="Radius in km" min="1" value="10"> km
         </div>
         <div id="searchResults" class="search-results"></div>
+        <div id="adminControls" class="admin-controls">
+            <h3>Admin Controls</h3>
+            <input type="text" id="adminInput" placeholder="Add new data (e.g., AB-1234)">
+            <button id="addDataButton">Add Data</button>
+            <div id="adminDataList" class="data-list"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
