@@ -19,6 +19,8 @@ body {
 
 #search-results {
     margin-top: 20px;
+    height: 200px; /* Added fixed height to prevent moving number pad */
+    overflow-y: auto; /* Added scrolling for long search results */
 }
 
 .number-pad {
