@@ -100,6 +100,11 @@ function filterResultsByLocation(query, location, radius) {
 // Event listeners for touch keyboard buttons
 document.querySelectorAll('.letter-button').forEach(button => {
     button.addEventListener('click', () => {
+        alert('Long press to edit the letter');
+    });
+
+    button.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
         const newLetter = prompt('Enter a letter:', button.textContent);
         if (newLetter && /^[A-Za-z]$/.test(newLetter)) {
             button.textContent = newLetter.toUpperCase();
@@ -119,6 +124,19 @@ document.querySelectorAll('.number-button').forEach(button => {
             updateSearchInput();
         }
     });
+});
+
+// Event listeners for arrow buttons
+document.getElementById('leftArrow').addEventListener('click', () => {
+    const currentInput = searchInput.value.replace(/[^\d]/g, '');
+    if (currentInput.length > 0) {
+        searchInput.value = searchInput.value.slice(0, -1);
+        updateSearchInput();
+    }
+});
+
+document.getElementById('rightArrow').addEventListener('click', () => {
+    alert('Right arrow button pressed (Implement functionality if needed)');
 });
 
 // Initialize the search input on load
