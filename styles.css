@@ -99,7 +99,8 @@ body {
     gap: 10px;
 }
 
-.number-button {
+.number-button,
+.arrow-button {
     padding: 20px;
     font-size: 24px;
     border: 1px solid #ccc;
