@@ -47,3 +47,23 @@ body {
 .search-bar button:active {
     opacity: 0.6;
 }
+
+.search-results {
+    position: absolute;
+    top: 60px;
+    width: calc(100% - 20px);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.search-results div {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.search-results div:hover {
+    background-color: #f1f1f1;
+}
