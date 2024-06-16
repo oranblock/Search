@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gesture-Controlled Search Bar with Location Filter</title>
+    <title>Centered Search Bar with Location Filter</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="search-bar" id="searchBar">
-        <input type="text" id="searchInput" placeholder="Search...">
-        <button id="clearButton">&times;</button>
-        <button id="voiceButton">&#127908;</button>
-        <button id="searchButton">Search</button>
+    <div class="container">
+        <div class="search-bar" id="searchBar">
+            <input type="text" id="searchInput" placeholder="Search (e.g., AB-1234)" pattern="[A-Za-z]{2}-\d{4}" maxlength="7">
+            <button id="clearButton">&times;</button>
+            <button id="voiceButton">&#127908;</button>
+            <button id="searchButton">Search</button>
+        </div>
+        <div class="location-filter">
+            <input type="checkbox" id="locationToggle"> Filter within 
+            <input type="number" id="radiusInput" placeholder="Radius in km" min="1" value="10"> km
+        </div>
+        <div id="searchResults" class="search-results"></div>
     </div>
-    <div class="location-filter">
-        <input type="checkbox" id="locationToggle"> Filter results within 
-        <input type="number" id="radiusInput" placeholder="Radius in km" min="1" value="10"> km
-    </div>
-    <div id="searchResults" class="search-results"></div>
     <script src="script.js"></script>
 </body>
 </html>
