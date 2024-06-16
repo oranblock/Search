@@ -120,7 +120,7 @@ document.querySelectorAll('.number-button').forEach(button => {
     button.addEventListener('click', () => {
         const currentInput = searchInput.value.replace(/[^\d]/g, '');
         if (currentInput.length < 4) {
-            searchInput.value += button.textContent;
+            searchInput.value = searchInput.value.slice(0, 3) + button.textContent;
             updateSearchInput();
         }
     });
