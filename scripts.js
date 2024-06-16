@@ -5,8 +5,12 @@ let searchButton = document.getElementById('searchButton');
 let locationToggle = document.getElementById('locationToggle');
 let radiusInput = document.getElementById('radiusInput');
 let searchResults = document.getElementById('searchResults');
+let adminInput = document.getElementById('adminInput');
+let addDataButton = document.getElementById('addDataButton');
+let adminDataList = document.getElementById('adminDataList');
 
 let userLocation = null;
+let adminData = [];
 
 // Function to initialize the search input
 function initializeSearchInput() {
@@ -44,34 +48,14 @@ searchButton.addEventListener('click', () => {
     let pattern = /^[A-Za-z]{2}-\d{4}$/;
     if (pattern.test(query)) {
         if (locationToggle.checked && userLocation) {
-            filterResultsByLocation(query, userLocation, parseInt(radiusInput.value));
-        } else {
-            displayResults([`Results for "${query}"`]);
-        }
-    } else {
-        alert('Please enter a valid search query (e.g., AB-1234)');
-    }
-});
-
-// Get user location if location filtering is enabled
-locationToggle.addEventListener('change', () => {
-    if (locationToggle.checked) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                userLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                };
-                console.log('User location:', userLocation);
-            },
-            (error) => {
-                console.error('Error getting location:', error);
-                locationToggle.checked = false;
-                alert('Unable to get location. Please try again.');
-            }
-        );
-    }
-});
+            function filterResultsByLocation(query, location, radius) {
+    // Placeholder for filtering logic
+    // Implement actual API call and filtering logic here
+    let filteredResults = [
+        `Filtered result for "${query}" within ${radius} km`
+    ];
+    displayResults(filteredResults);
+}
 
 // Function to display results
 function displayResults(results) {
@@ -85,16 +69,6 @@ function displayResults(results) {
         });
         searchResults.appendChild(resultItem);
     });
-}
-
-// Function to filter results by location
-function filterResultsByLocation(query, location, radius) {
-    // Placeholder for filtering logic
-    // Implement actual API call and filtering logic here
-    let filteredResults = [
-        `Filtered result for "${query}" within ${radius} km`
-    ];
-    displayResults(filteredResults);
 }
 
 // Event listeners for touch keyboard buttons
@@ -139,5 +113,38 @@ document.getElementById('rightArrow').addEventListener('click', () => {
     alert('Right arrow button pressed (Implement functionality if needed)');
 });
 
+// Function to add data
+function addData() {
+    const newData = adminInput.value;
+    let pattern = /^[A-Za-z]{2}-\d{4}$/;
+    if (pattern.test(newData)) {
+        adminData.push(newData);
+        updateAdminDataList();
+        adminInput.value = '';
+    } else {
+        alert('Please enter a valid data entry (e.g., AB-1234)');
+    }
+}
+
+// Function to update the admin data list display
+function updateAdminDataList() {
+    adminDataList.innerHTML = '';
+    adminData.forEach((data, index) => {
+        let dataItem = document.createElement('div');
+        dataItem.textContent = data;
+        dataItem.addEventListener('click', () => {
+            let newData = prompt('Edit data:', data);
+            if (newData && /^[A-Za-z]{2}-\d{4}$/.test(newData) && adminData.indexOf(newData) === -1) {
+                adminData[index] = newData;
+                updateAdminDataList();
+            } else if (newData) {
+                alert('Invalid or duplicate data entry');
+            }
+        });
+        adminDataList.appendChild(dataItem);
+    });
+}
+
 // Initialize the search input on load
 initializeSearchInput();
+addDataButton.addEventListener('click', addData);
