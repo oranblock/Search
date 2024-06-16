@@ -8,10 +8,29 @@ let searchResults = document.getElementById('searchResults');
 
 let userLocation = null;
 
+// Function to initialize the search input
+function initializeSearchInput() {
+    const savedLetters = localStorage.getItem('searchLetters');
+    if (savedLetters) {
+        const letters = savedLetters.split('-');
+        document.getElementById('letter1').textContent = letters[0];
+        document.getElementById('letter2').textContent = letters[1];
+    }
+    updateSearchInput();
+}
+
+// Update search input based on letter buttons and dash
+function updateSearchInput() {
+    const letter1 = document.getElementById('letter1').textContent;
+    const letter2 = document.getElementById('letter2').textContent;
+    const numbers = searchInput.value.slice(3);
+    searchInput.value = `${letter1}${letter2}-${numbers}`;
+}
+
 // Clear search input
 clearButton.addEventListener('click', () => {
     searchInput.value = '';
-    searchInput.focus();
+    updateSearchInput();
 });
 
 // Placeholder for voice search functionality
@@ -78,20 +97,27 @@ function filterResultsByLocation(query, location, radius) {
     displayResults(filteredResults);
 }
 
-// Example for instant search results as the user types
-searchInput.addEventListener('input', () => {
-    let value = searchInput.value.toLowerCase();
-    searchResults.innerHTML = '';
-    if (value) {
-        let results = ['Example Result 1', 'Example Result 2', 'Example Result 3'];
-        results.forEach(result => {
-            let resultItem = document.createElement('div');
-            resultItem.textContent = result;
-            resultItem.addEventListener('click', () => {
-                searchInput.value = result;
-                searchResults.innerHTML = '';
-            });
-            searchResults.appendChild(resultItem);
-        });
-    }
+// Event listeners for touch keyboard buttons
+document.querySelectorAll('.letter-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const letter1 = document.getElementById('letter1').textContent;
+        const letter2 = document.getElementById('letter2').textContent;
+        const newLetter = prompt('Enter a letter:', button.textContent);
+        if (newLetter && /^[A-Za-z]$/.test(newLetter)) {
+            button.textContent = newLetter.toUpperCase();
+            localStorage.setItem('searchLetters', `${letter1}-${letter2}`);
+            updateSearchInput();
+        }
+    });
 });
+
+document.querySelectorAll('.number-button').forEach(button => {
+    button.addEventListener('click', () => {
+        if (searchInput.value.length < 7) {
+            searchInput.value += button.textContent;
+            updateSearchInput();
+        }
+    });
+});
+
+// Initialize the search input
