@@ -1,56 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Bar with Number Pad</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="login-container">
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button id="login-button">Login</button>
-        <div id="user-role"></div>
-    </div>
+let currentUser = null;
 
-    <div class="search-container">
-        <input type="text" id="search-bar" placeholder="AB-1234" maxlength="7">
-        <label>
-            <input type="checkbox" id="filter-radius"> Filter by radius
-        </label>
-        <div id="search-results"></div>
-    </div>
+const users = [
+    { username: 'admin', password: 'adminpass', role: 'admin' },
+    { username: 'user', password: 'userpass', role: 'user' }
+];
 
-    <div class="number-pad">
-        <div class="letter-buttons">
-            <button>A</button>
-            <button>B</button>
-            <button>C</button>
-            <button>D</button> <!-- Added one more letter button -->
+function login(username, password) {
+    return users.find(user => user.username === username && user.password === password);
+}
+
+document.getElementById('login-button').addEventListener('click', function() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    currentUser = login(username, password);
+    if (currentUser) {
+        document.getElementById('user-role').textContent = `Logged in as ${currentUser.role}`;
+        document.querySelector('.admin-container').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+    } else {
+        alert('Invalid login');
+    }
+});
+
+// Hide admin container initially
+document.querySelector('.admin-container').style.display = 'none';
+
+const database = {
+    data: [
+        { code: "AB-1234", createdBy: "admin" },
+        { code: "CD-5678", createdBy: "admin" },
+        { code: "EF-9012", createdBy: "admin" }
+    ],
+    getAllData() {
+        return this.data;
+    },
+    addData(newEntry) {
+        this.data.push(newEntry);
+    },
+    updateData(oldCode, newCode) {
+        const item = this.data.find(item => item.code === oldCode);
+        if (item) {
+            item.code = newCode;
+        }
+    }
+};
+
+function displayResults(results) {
+    const resultsContainer = document.getElementById('search-results');
+    resultsContainer.innerHTML = results.map(item => `
+        <div>
+            ${item.code} ${item.createdBy !== 'admin' ? '<button onclick="editData(\'' + item.code + '\')">Edit</button>' : ''}
         </div>
-        <div class="number-buttons">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button id="left-arrow">&larr;</button> <!-- Left Arrow -->
-            <button>-</button> <!-- Changed right arrow to dash -->
-            <button>0</button>
-        </div>
-    </div>
+    `).join('');
+}
 
-    <div class="admin-container">
-        <h3>Admin: Add New Data</h3>
-        <input type="text" id="new-data" placeholder="AB-1234">
-        <button id="add-data">Add Data</button>
-    </div>
+function filterData(query, filterRadius) {
+    const allData = database.getAllData();
+    return allData.filter(item => {
+        let matchesQuery = item.code.includes(query);
+        if (filterRadius) {
+            matchesQuery = true;
+        }
+        return matchesQuery;
+    });
+}
 
-    <script src="scripts.js"></script>
-</body>
-</html>
+function addData(code, createdBy) {
+    database.addData({ code, createdBy });
+    const query = document.getElementById('search-bar').value;
+    const filterRadius = document.getElementById('filter-radius').checked;
+    const results = filterData(query, filterRadius);
+    displayResults(results);
+}
+
+function editData(code) {
+    const newCode = prompt("Enter new code:", code);
+    if (newCode) {
+        database.updateData(code, newCode);
+        const query = document.getElementById('search-bar').value;
+        const filterRadius = document.getElementById('filter-radius').checked;
+        const results = filterData(query, filterRadius);
+        displayResults(results);
+    }
+}
+
+document.getElementById('search-bar').addEventListener('input', function() {
+    const query = this.value;
+    if (/^[A-Z]{0,2}-\d{0,4}$/.test(query)) {  // Restrict to 2 letters, dash, and 4 numbers
+        const filterRadius = document.getElementById('filter-radius').checked;
+        const results = filterData(query, filterRadius);
+        displayResults(results);
+    } else {
+        this.value = this.value.slice(0, -1);  // Prevent invalid input
+    }
+});
+
+document.getElementById('filter-radius').addEventListener('change', function() {
+    const query = document.getElementById('search-bar').value;
+    const filterRadius = this.checked;
+    const results = filterData(query, filterRadius);
+    displayResults(results);
+});
+
+document.querySelectorAll('.number-buttons button').forEach(button => {
+    button.addEventListener('click', function() {
+        const value = this.textContent;
+        const searchBar = document.getElementById('search-bar');
+        if (value === "←") {
+            searchBar.value = searchBar.value.slice(0, -1);
+        } else if (value === "-") {
+            if (/^[A-Z]{2}$/.test(searchBar.value) && !searchBar.value.includes('-')) {
+                searchBar.value += value;
+            }
+        } else {
+            if (/^[A-Z]{0,2}-\d{0,4}$/.test(searchBar.value + value)) {
+                searchBar.value += value;
+            }
+        }
+        const query = searchBar.value;
+        const filterRadius = document.getElementById('filter-radius').checked;
+        const results = filterData(query, filterRadius);
+        displayResults(results);
+    });
+});
+
+document.querySelectorAll('.letter-buttons button').forEach(button => {
+    let timer;
+    button.addEventListener('mousedown', function() {
+        timer = setTimeout(() => {
+            const searchBar = document.getElementById('search-bar');
+            const position = searchBar.value.indexOf(this.textContent);
+            if (position !== -1) {
+                searchBar.value = searchBar.value.substring(0, position) + searchBar.value.substring(position + 1);
+                const query = searchBar.value;
+                const filterRadius = document.getElementById('filter-radius').checked;
+                const results = filterData(query, filterRadius);
+                displayResults(results);
+            }
+        }, 800); // Adjust the time for long press detection here (800 ms)
+    });
+
+    button.addEventListener('mouseup', function() {
+        clearTimeout(timer);
+    });
+
+    button.addEventListener('mouseleave', function() {
+        clearTimeout(timer);
+    });
+
+    button.addEventListener('click', function() {
+        const letter = this.textContent;
+        const searchBar = document.getElementById('search-bar');
+        if (/^[A-Z]{0,2}$/.test(searchBar.value.split('-')[0] + letter)) {
+            searchBar.value += letter;
+        }
+        const query = searchBar.value;
+        const filterRadius = document.getElementById('filter-radius').checked;
+        const results = filterData(query, filterRadius);
+        displayResults(results);
+    });
+});
+
+document.getElementById('add-data').addEventListener('click', function() {
+    if (currentUser && currentUser.role === 'admin') {
+        const newData = document.getElementById('new-data').value;
+        if (/^[A-Z]{2}-\d{4}$/.test(newData)) {
+            addData(newData, 'admin');
+            document.getElementById('new-data').value = '';
+        } else {
+            alert('Invalid format. Use: AB-1234');
+        }
+    } else {
+        alert('Only admins can add new data');
+    }
+});
+
+const initialData = database.getAllData();
+displayResults(initialData);
