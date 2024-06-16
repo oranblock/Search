@@ -17,3 +17,29 @@
             <div class="letter-buttons">
                 <button class="letter-button" id="letter1">A</button>
                 <button class="letter-button" id="letter2">B</button>
+</div>
+            <div class="number-pad">
+                <button class="number-button">1</button>
+                <button class="number-button">2</button>
+                <button class="number-button">3</button>
+                <button class="number-button">4</button>
+                <button class="number-button">5</button>
+                <button class="number-button">6</button>
+                <button class="number-button">7</button>
+                <button class="number-button">8</button>
+                <button class="number-button">9</button>
+                <button class="arrow-button" id="leftArrow">&#8592;</button>
+                <button class="number-button">0</button>
+                <button class="arrow-button" id="rightArrow">&#8594;</button>
+            </div>
+        </div>
+        <button id="searchButton">Search</button>
+        <div class="location-filter">
+            <input type="checkbox" id="locationToggle"> Filter within 
+            <input type="number" id="radiusInput" placeholder="Radius in km" min="1" value="10"> km
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
