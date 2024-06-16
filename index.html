@@ -10,9 +10,15 @@
     <div class="container">
         <div class="search-bar" id="searchBar">
             <input type="text" id="searchInput" placeholder="AB-1234" maxlength="7" readonly>
-            <div class="touch-keyboard">
+            <button id="clearButton">&times;</button>
+            <button id="voiceButton">&#127908;</button>
+        </div>
+        <div class="touch-keyboard">
+            <div class="letter-buttons">
                 <button class="letter-button" id="letter1">A</button>
                 <button class="letter-button" id="letter2">B</button>
+            </div>
+            <div class="number-pad">
                 <button class="number-button">1</button>
                 <button class="number-button">2</button>
                 <button class="number-button">3</button>
@@ -22,10 +28,10 @@
                 <button class="number-button">7</button>
                 <button class="number-button">8</button>
                 <button class="number-button">9</button>
+                <button class="number-button">*</button>
                 <button class="number-button">0</button>
+                <button class="number-button">#</button>
             </div>
-            <button id="clearButton">&times;</button>
-            <button id="voiceButton">&#127908;</button>
         </div>
         <button id="searchButton">Search</button>
         <div class="location-filter">
