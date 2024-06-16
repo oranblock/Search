@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.search-bar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.search-bar button {
+    padding: 10px;
+    font-size: 18px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#clearButton {
+    background-color: #f44336;
+}
+
+#voiceButton {
+    background-color: #4CAF50;
+}
+
+.search-bar button:hover {
+    opacity: 0.8;
+}
+
+.search-bar button:active {
+    opacity: 0.6;
+}
