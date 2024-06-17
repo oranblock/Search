@@ -17,7 +17,6 @@ body {
 
 .login-container,
 .search-container,
-.number-pad,
 .admin-container {
     margin-bottom: 20px;
 }
@@ -45,41 +44,13 @@ body {
     margin-top: 10px;
 }
 
-#file-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-}
-
 #search-results {
     margin-top: 10px;
-    height: 150px; /* Adjust height to prevent moving number pad */
+    height: 150px;
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
     box-sizing: border-box;
-}
-
-.number-pad {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.letter-buttons,
-.number-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 5px 0;
-}
-
-.letter-buttons button,
-.number-buttons button {
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    margin: 5px;
 }
 
 #user-role {
