@@ -39,57 +39,35 @@ function displayResults(results) {
     const resultsContainer = document.getElementById('search-results');
     resultsContainer.innerHTML = results.map((item, index) => `
         <div>
-            Code: <input type="text" value="${item.Code}" onchange="editValue(${index}, this.value)">
+            ${currentUser.role === 'admin' ? 
+                `Well No: <input type="text" value="${item['well no']}" onchange="editValue(${index}, 'well no', this.value)">
+                Allowable Pressure: <input type="number" value="${item['alloweable']}" onchange="editValue(${index}, 'alloweable', this.value)">`
+            : 
+                `Well No: ${item['well no']} Allowable Pressure: ${item['alloweable']}`
+            }
+            Flow: <input type="number" value="${item['flow']}" onchange="editValue(${index}, 'flow', this.value)">
+            Pressure: <input type="number" value="${item['pressure ']}" onchange="editValue(${index}, 'pressure ', this.value)">
         </div>
     `).join('');
 }
 
-function filterData(query, filterRadius) {
-    return excelData.filter(item => {
-        let matchesQuery = item.Code.includes(query);
-        if (filterRadius) {
-            matchesQuery = true;
-        }
-        return matchesQuery;
-    });
-}
-
-function addData(code) {
-    excelData.push({ Code: code });
-    displayResults(excelData);
-}
-
-function editValue(index, value) {
-    excelData[index].Code = value;
+function editValue(index, field, value) {
+    excelData[index][field] = value;
     displayResults(excelData);
 }
 
 document.getElementById('search-bar').addEventListener('input', function() {
     const query = this.value;
     const filterRadius = document.getElementById('filter-radius').checked;
-    const results = filterData(query, filterRadius);
+    const results = excelData.filter(item => item['well no'].includes(query));
     displayResults(results);
 });
 
 document.getElementById('filter-radius').addEventListener('change', function() {
     const query = document.getElementById('search-bar').value;
     const filterRadius = this.checked;
-    const results = filterData(query, filterRadius);
+    const results = excelData.filter(item => item['well no'].includes(query));
     displayResults(results);
-});
-
-document.getElementById('add-data').addEventListener('click', function() {
-    if (currentUser && currentUser.role === 'admin') {
-        const code = document.getElementById('new-code').value;
-        if (code) {
-            addData(code);
-            document.getElementById('new-code').value = '';
-        } else {
-            alert('Invalid input');
-        }
-    } else {
-        alert('Only admins can add new data');
-    }
 });
 
 // Fetch and display data when the page loads
