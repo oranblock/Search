@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Bar with Number Pad</title>
+    <title>Data Management</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,45 +16,20 @@
         </div>
 
         <div class="search-container">
-            <input type="file" id="file-input">
-            <input type="text" id="search-bar" placeholder="AB-1234" maxlength="7">
+            <input type="text" id="search-bar" placeholder="Search by Code" maxlength="7">
             <label>
                 <input type="checkbox" id="filter-radius"> Filter by radius
             </label>
             <div id="search-results"></div>
         </div>
 
-        <div class="number-pad">
-            <div class="letter-buttons">
-                <button>A</button>
-                <button>B</button>
-                <button>C</button>
-                <button>D</button> <!-- Added one more letter button -->
-            </div>
-            <div class="number-buttons">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button id="left-arrow">&larr;</button> <!-- Left Arrow -->
-                <button>-</button> <!-- Changed right arrow to dash -->
-                <button>0</button>
-            </div>
-        </div>
-
         <div class="admin-container">
             <h3>Admin: Add New Data</h3>
-            <input type="text" id="new-data" placeholder="AB-1234">
+            <input type="text" id="new-code" placeholder="Code">
             <button id="add-data">Add Data</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
