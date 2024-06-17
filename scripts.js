@@ -37,9 +37,9 @@ function fetchData() {
 
 function displayResults(results) {
     const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = results.map(item => `
+    resultsContainer.innerHTML = results.map((item, index) => `
         <div>
-            Code: ${item.Code}
+            Code: <input type="text" value="${item.Code}" onchange="editValue(${index}, this.value)">
         </div>
     `).join('');
 }
@@ -54,6 +54,16 @@ function filterData(query, filterRadius) {
     });
 }
 
+function addData(code) {
+    excelData.push({ Code: code });
+    displayResults(excelData);
+}
+
+function editValue(index, value) {
+    excelData[index].Code = value;
+    displayResults(excelData);
+}
+
 document.getElementById('search-bar').addEventListener('input', function() {
     const query = this.value;
     const filterRadius = document.getElementById('filter-radius').checked;
@@ -66,6 +76,20 @@ document.getElementById('filter-radius').addEventListener('change', function() {
     const filterRadius = this.checked;
     const results = filterData(query, filterRadius);
     displayResults(results);
+});
+
+document.getElementById('add-data').addEventListener('click', function() {
+    if (currentUser && currentUser.role === 'admin') {
+        const code = document.getElementById('new-code').value;
+        if (code) {
+            addData(code);
+            document.getElementById('new-code').value = '';
+        } else {
+            alert('Invalid input');
+        }
+    } else {
+        alert('Only admins can add new data');
+    }
 });
 
 // Fetch and display data when the page loads
