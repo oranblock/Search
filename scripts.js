@@ -48,12 +48,12 @@ function displayResults(results) {
             Flow: <input class="input-box" type="number" value="${item['flow']}" onchange="editValue(${index}, 'flow', this.value)">
             Pressure: <input class="input-box" type="number" value="${item['pressure ']}" onchange="editValue(${index}, 'pressure ', this.value)">
         </div>
-    `).join('') + `<button id="save-button" onclick="saveData()">Save</button>`;
+    `).join('');
+    resultsContainer.innerHTML += `<button id="save-button" onclick="saveData()">Save</button>`;
 }
 
 function editValue(index, field, value) {
     excelData[index][field] = value;
-    displayResults(excelData);
 }
 
 function saveData() {
