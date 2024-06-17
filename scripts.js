@@ -38,22 +38,39 @@ function fetchData() {
 function displayResults(results) {
     const resultsContainer = document.getElementById('search-results');
     resultsContainer.innerHTML = results.map((item, index) => `
-        <div>
+        <div class="data-row">
             ${currentUser.role === 'admin' ? 
-                `Well No: <input type="text" value="${item['well no']}" onchange="editValue(${index}, 'well no', this.value)">
-                Allowable Pressure: <input type="number" value="${item['alloweable']}" onchange="editValue(${index}, 'alloweable', this.value)">`
+                `Well No: <input class="input-box" type="text" value="${item['well no']}" onchange="editValue(${index}, 'well no', this.value)">
+                Allowable Pressure: <input class="input-box" type="number" value="${item['alloweable']}" onchange="editValue(${index}, 'alloweable', this.value)">`
             : 
                 `Well No: ${item['well no']} Allowable Pressure: ${item['alloweable']}`
             }
-            Flow: <input type="number" value="${item['flow']}" onchange="editValue(${index}, 'flow', this.value)">
-            Pressure: <input type="number" value="${item['pressure ']}" onchange="editValue(${index}, 'pressure ', this.value)">
+            Flow: <input class="input-box" type="number" value="${item['flow']}" onchange="editValue(${index}, 'flow', this.value)">
+            Pressure: <input class="input-box" type="number" value="${item['pressure ']}" onchange="editValue(${index}, 'pressure ', this.value)">
         </div>
-    `).join('');
+    `).join('') + `<button id="save-button" onclick="saveData()">Save</button>`;
 }
 
 function editValue(index, field, value) {
     excelData[index][field] = value;
     displayResults(excelData);
+}
+
+function saveData() {
+    fetch('save_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(excelData)
+    }).then(response => response.json())
+      .then(data => {
+          alert('Data saved successfully!');
+      })
+      .catch(error => {
+          console.error('Error saving data:', error);
+          alert('Failed to save data');
+      });
 }
 
 document.getElementById('search-bar').addEventListener('input', function() {
